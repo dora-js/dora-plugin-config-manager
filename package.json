@@ -1,0 +1,51 @@
+{
+  "name": "dora-plugin-config-manager",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dora-js/dora-plugin-config-manager"
+  },
+  "homepage": "https://github.com/dora-js/dora-plugin-config-manager",
+  "author": "pigcan <jiangjay818@gmail.com>",
+  "license": "MIT",
+  "main": "./lib",
+  "scripts": {
+    "build": "rm -rf lib && babel src --out-dir lib",
+    "test": "babel-node node_modules/.bin/babel-istanbul cover node_modules/.bin/_mocha --no-timeouts",
+    "lint": "eslint --ext .js src",
+    "coveralls": "cat ./coverage/lcov.info | coveralls"
+  },
+  "pre-commit": [
+    "lint"
+  ],
+  "dependencies": {
+
+  },
+  "devDependencies": {
+    "babel-cli": "~6.2.0",
+    "babel-istanbul": "^0.5.9",
+    "babel-plugin-add-module-exports": "~0.1.1",
+    "babel-preset-es2015": "~6.1.18",
+    "babel-preset-stage-0": "~6.1.18",
+    "coveralls": "^2.11.6",
+    "dora": "~0.2.3",
+    "eslint": "~1.10.3",
+    "eslint-config-airbnb": "~4.0.0",
+    "mocha": "~2.3.4",
+    "pre-commit": "~1.1.2"
+  },
+  "babel": {
+    "presets": [
+      "es2015",
+      "stage-0"
+    ],
+    "plugins": [
+      "add-module-exports"
+    ]
+  },
+  "files": [
+    "lib",
+    "package.json",
+    "README.md"
+  ]
+}
