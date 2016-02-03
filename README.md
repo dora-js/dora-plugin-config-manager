@@ -21,8 +21,8 @@ $ ./node_modules/.bin/dora --plugins 'atool-build,config-manager?path=./config.j
 It is the path to your global *.config.js file. If you do not specify `exports` would export `default`, otherwise would  export exports which you specify after `|`.
 
 Multiple `exports` please the connector `-` to connect them one by one.
-
-**Note: config is the reversed word!**
+d
+**Note: `config` is the reserved word!**
 
 The `exports` will be seted by  [`Dora.set`](https://github.com/dora-js/dora/blob/master/docs/How-To-Write-A-Dora-Plugin.md#setkey-value)
 
