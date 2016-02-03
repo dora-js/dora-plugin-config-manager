@@ -1,9 +1,14 @@
 {
   "extends": "eslint-config-airbnb/base",
   "rules": {
-    "no-console": [0]
+    "no-console": [0],
+    "object-shorthand": 0
   },
   "ecmaFeatures": {
     "generators": 1,
   },
+  "env": {
+    "node": true,
+    "mocha": true
+  }
 }
