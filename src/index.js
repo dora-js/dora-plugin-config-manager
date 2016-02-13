@@ -1,31 +1,25 @@
-import { isExistedAFile, getCfg, getPathKeyPair, getRealKey } from './util';
-import cdeps from './cdeps';
+import { isExistedAFile, getCfg, getPathKeyPair,
+  getChangedPairsAndCache, setAndEmitter } from './util';
 import EventEmitter from 'events';
-import isEqual from 'lodash.isequal';
 
 const changeEmitter = new EventEmitter();
-let cache;
 let timer;
+let cache = '';
 
-function loadFile(watchKeys, configFile, get, set) {
-  const depList = cdeps(configFile);
-  depList.forEach(dep => delete require.cache[require.resolve(dep)]);
-  cache = require(configFile);
-  watchKeys.forEach(_key => {
-    const key = getRealKey(_key);
-
-    if ((key !== '_global_config' && !isEqual(cache[key], get(key)))
-      || (key === '_global_config' && !isEqual(cache, get(key)))) {
-      const value = key === '_global_config' ? cache : cache[key];
-      set(`${_key}`, value);
-      changeEmitter.emit(_key);
-    }
-  });
+function fileChangedTriggerEvent(watchKeys, configFilePath, set) {
+  const { changedPairs, cacheNow } = getChangedPairsAndCache(cache, watchKeys, configFilePath);
+  if (changedPairs.length) {
+    setAndEmitter(changedPairs, changeEmitter, set);
+  }
+  cache = cacheNow;
 }
 
 export default {
   'middleware.before'() {
-    const { log, query, set, get } = this;
+    const { log, query, set } = this;
+
+    set('configManagerEmitter', changeEmitter);
+    global.configManagerEmitter = changeEmitter;
 
     const clearCacheDelay = query.watchDelay || 300;
     const cwd = process.cwd();
@@ -36,7 +30,6 @@ export default {
 
       return;
     }
-
     const config = getCfg(pathKeyPair);
     Object.keys(config).forEach((_key) => {
       const key = _key;
@@ -44,6 +37,9 @@ export default {
       set(`${key}`, value);
     });
     if (timer) clearTimeout(timer);
-    timer = setInterval(loadFile(Object.keys(config), pathKeyPair.path, get, set), clearCacheDelay);
+    timer = setInterval(
+      fileChangedTriggerEvent(Object.keys(config), pathKeyPair.path, set),
+      clearCacheDelay
+    );
   },
 };

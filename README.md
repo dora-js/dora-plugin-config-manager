@@ -47,4 +47,3 @@ $ npm test
 ## LICENSE
 
 MIT
-

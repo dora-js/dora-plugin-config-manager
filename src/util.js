@@ -1,6 +1,8 @@
 import { join } from 'path';
 import { statSync } from 'fs';
 import log from 'spm-log';
+import cdeps from './cdeps';
+import isEqual from 'lodash.isequal';
 
 export function isExistedAFile(path) {
   let isAFile = false;
@@ -59,4 +61,40 @@ export function getRealKey(key) {
   }
 
   return key.replace('_global_', '');
+}
+
+export function getChangedPairsAndCache(cachePrev, watchKeys, configFilePath) {
+  let cache = cachePrev;
+  const depList = cdeps(configFilePath);
+  depList.forEach(dep => delete require.cache[require.resolve(dep)]);
+  const cacheNow = require(configFilePath);
+  if (!cache) {
+    cache = cacheNow;
+  }
+  const changedPairs = watchKeys.reduce((prev, globalKey) => {
+    const key = getRealKey(globalKey);
+    if ((key !== '_global_config' && !isEqual(cacheNow[key], cache[key]))
+      || (key === '_global_config' && !isEqual(cacheNow, cache))) {
+      const value = key === '_global_config' ? cacheNow : cacheNow[key];
+      const changeItem = {
+        globalKey,
+        value,
+      };
+      prev.push(changeItem);
+      return prev;
+    }
+    return prev;
+  }, []);
+
+  return {
+    changedPairs,
+    cacheNow,
+  };
+}
+
+export function setAndEmitter(changedPairs, changeEmitter, set) {
+  changedPairs.forEach(changedPair => {
+    set(changedPair.globalKey, changedPair.value);
+    changeEmitter.emit(changedPair.globalKey);
+  });
 }

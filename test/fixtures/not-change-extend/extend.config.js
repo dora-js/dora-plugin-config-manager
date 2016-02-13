@@ -1,0 +1,1 @@
+var extend = {ooxx: 1};module.exports = extend;
