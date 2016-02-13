@@ -36,7 +36,9 @@ If you dont use `exports` the `default` configure is under `this.get('_global_co
 
 Your `*.config.js` is alive!
 
-If  `exports` which named `a` e.x. changed during servering. You can receive the event by `event.on('_global_a',callback)`.
+If  `exports` which named `a` e.x. changed during servering. You can receive the event by `this.get('configManagerEmitter').on('_global_a', callback)`.
+
+Or `global.configManagerEmitter.on('_global_a', callback)`
 
 ## Test
 
