@@ -2,6 +2,10 @@
 
 ---
 
+## 0.2.3
+
+-bugfix: spm-log should be as deps
+
 ## 0.2.2
 
 - bugfix: publish an older version - -!
