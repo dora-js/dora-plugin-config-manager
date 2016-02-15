@@ -36,9 +36,11 @@ export default {
       const value = config[key];
       set(`${key}`, value);
     });
-    if (timer) clearTimeout(timer);
-    timer = setInterval(
-      fileChangedTriggerEvent(Object.keys(config), pathKeyPair.path, set),
+    if (timer) clearInterval(timer);
+
+    timer = setInterval(() => {
+      fileChangedTriggerEvent(Object.keys(config), pathKeyPair.path, set);
+    },
       clearCacheDelay
     );
   },

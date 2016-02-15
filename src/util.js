@@ -73,13 +73,16 @@ export function getChangedPairsAndCache(cachePrev, watchKeys, configFilePath) {
   }
   const changedPairs = watchKeys.reduce((prev, globalKey) => {
     const key = getRealKey(globalKey);
+
     if ((key !== '_global_config' && !isEqual(cacheNow[key], cache[key]))
       || (key === '_global_config' && !isEqual(cacheNow, cache))) {
       const value = key === '_global_config' ? cacheNow : cacheNow[key];
+
       const changeItem = {
         globalKey,
         value,
       };
+
       prev.push(changeItem);
       return prev;
     }
@@ -95,6 +98,6 @@ export function getChangedPairsAndCache(cachePrev, watchKeys, configFilePath) {
 export function setAndEmitter(changedPairs, changeEmitter, set) {
   changedPairs.forEach(changedPair => {
     set(changedPair.globalKey, changedPair.value);
-    changeEmitter.emit(changedPair.globalKey);
+    changeEmitter.emit(`${changedPair.globalKey}`);
   });
 }
