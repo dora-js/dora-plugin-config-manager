@@ -2,6 +2,10 @@
 
 ---
 
+## 0.2.1
+
+- bugfix: see issue #1 and #2
+
 ## 0.2.0
 
 - refactor: more robust code more comprehensive test case
